@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>NYT Search</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Link jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+    <!--  -->
+
+    <style>
+        a { 
+          display: block;
+          font-size: 1em;
+          margin-top: 5px;
+          margin-bottom: 5px;
+          margin-left: 0;
+          margin-right: 0;
+          font-weight: bold;
+        }
+        </style>
+</head>
+
+<body style="width: 960px; margin: auto;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="jumbotron" id="jumbotron1"
+                    style="color: white; background-color: blue; text-align: center;">
+                    <h1>New York Times Search</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card" id="card1">
+                    <div class="card-header" style="font-weight: bold">
+                        Search Parameters
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">Search Term:</label>
+                                        <input type="email" class="form-control" id="searchTerm" placeholder="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Number of Records to Recieve:</label>
+                                        <select class="form-control" id="numberOfRecords">
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">Start Year (Optional):</label>
+                                        <input type="email" class="form-control" id="startYear" placeholder="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label for="exampleFormControlInput1">End Year (Optional):</label>
+                                    <input type="email" class="form-control" id="endYear" placeholder="">
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <button class="btn btn-primary" type="submit" id="submit-button">Submit</button>
+                            <button class="btn btn-primary" type="submit" id="clear-button">Clear Results</button>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card" id="card2">
+                    <div class="card-header" style="font-weight: bold">
+                        Top Articles
+                    </div>
+                    <div class="card-body" id="articlesGoHere">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+
+        $("#submit-button").on("click", function () {
+
+            // Storing our giphy API URL for a random cat image
+
+            var searchTerm = $("#searchTerm").val();
+            var numberOfArticles = $("#numberOfRecords").val();
+
+
+            var startYear = $("#startYear").val();
+            var endYear = $("#endYear").val();;
+
+
+            if (startYear == 0) {
+                startYear = 2019;
+            }
+            else if (startYear < 1980) {
+                startYear = 1980;
+            }
+
+            if (endYear == 0) {
+                endYear = 2019;
+            }
+            else if (endYear < 1980) {
+                endYear = 1980;
+            }
+
+
+
+
+
+            var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + searchTerm + "&facet_fields=source&facet=true&begin_date=" + startYear + "0101&end_date=" + endYear + "1231&api-key=WGXwewAN8TyIV801VD5Qyx1smEz2slVc";
+
+            console.log(queryURL);
+            // Perfoming an AJAX GET request to our queryURL
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            })
+
+                // After the data from the AJAX request comes back
+                .then(function (response) {
+
+                    console.log(queryURL);
+
+                    console.log(response);
+
+                    for (var i = 0; i < numberOfArticles; i++) {
+
+                        console.log(response.response.docs[i].headline.main);
+                        console.log(response.response.docs[i].web_url);
+
+            
+                        $("#articlesGoHere").prepend("<a href='"+response.response.docs[i].web_url+"'>" + response.response.docs[i].headline.main + "</a> <br>");
+                       
+
+                       
+                    }
+
+
+
+                });
+        });
+
+
+        $("#clear-button").on("click", function () {
+            $("#articlesGoHere").empty();
+        });
+
+    </script>
+</body>
+
+</html>
+Collapse
